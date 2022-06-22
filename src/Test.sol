@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.0 <0.9.0;
+pragma solidity >=0.5.13 <0.9.0;
 
 import "./Script.sol";
 import "ds-test/test.sol";
 
 // Wrappers around Cheatcodes to avoid footguns
-abstract contract Test is DSTest, Script {
-    using stdStorage for StdStorage;
+contract Test is DSTest, Script {
+    using stdStorage for stdStorage.StdStorage;
 
     uint256 internal constant UINT256_MAX =
         115792089237316195423570985008687907853269984665640564039457584007913129639935;
 
-    StdStorage internal stdstore;
+    stdStorage.StdStorage internal stdstore;
 
     /*//////////////////////////////////////////////////////////////////////////
                                     STD-LOGS
@@ -231,16 +231,16 @@ abstract contract Test is DSTest, Script {
                                     STD-ASSERTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    function fail(string memory err) internal virtual {
+    function fail(string memory err) internal {
         emit log_named_string("Error", err);
         fail();
     }
 
-    function assertFalse(bool data) internal virtual {
+    function assertFalse(bool data) internal {
         assertTrue(!data);
     }
 
-    function assertFalse(bool data, string memory err) internal virtual {
+    function assertFalse(bool data, string memory err) internal {
         assertTrue(!data, err);
     }
 
@@ -321,7 +321,7 @@ abstract contract Test is DSTest, Script {
         uint256 a,
         uint256 b,
         uint256 maxDelta
-    ) internal virtual {
+    ) internal  {
         uint256 delta = stdMath.delta(a, b);
 
         if (delta > maxDelta) {
@@ -339,7 +339,7 @@ abstract contract Test is DSTest, Script {
         uint256 b,
         uint256 maxDelta,
         string memory err
-    ) internal virtual {
+    ) internal  {
         uint256 delta = stdMath.delta(a, b);
 
         if (delta > maxDelta) {
@@ -352,7 +352,7 @@ abstract contract Test is DSTest, Script {
         int256 a,
         int256 b,
         uint256 maxDelta
-    ) internal virtual {
+    ) internal  {
         uint256 delta = stdMath.delta(a, b);
 
         if (delta > maxDelta) {
@@ -370,7 +370,7 @@ abstract contract Test is DSTest, Script {
         int256 b,
         uint256 maxDelta,
         string memory err
-    ) internal virtual {
+    ) internal  {
         uint256 delta = stdMath.delta(a, b);
 
         if (delta > maxDelta) {
@@ -383,7 +383,7 @@ abstract contract Test is DSTest, Script {
         uint256 a,
         uint256 b,
         uint256 maxPercentDelta // An 18 decimal fixed point number, where 1e18 == 100%
-    ) internal virtual {
+    ) internal  {
         if (b == 0) return assertEq(a, b); // If the expected is 0, actual must be too.
 
         uint256 percentDelta = stdMath.percentDelta(a, b);
@@ -403,7 +403,7 @@ abstract contract Test is DSTest, Script {
         uint256 b,
         uint256 maxPercentDelta, // An 18 decimal fixed point number, where 1e18 == 100%
         string memory err
-    ) internal virtual {
+    ) internal  {
         if (b == 0) return assertEq(a, b); // If the expected is 0, actual must be too.
 
         uint256 percentDelta = stdMath.percentDelta(a, b);
@@ -418,7 +418,7 @@ abstract contract Test is DSTest, Script {
         int256 a,
         int256 b,
         uint256 maxPercentDelta
-    ) internal virtual {
+    ) internal  {
         if (b == 0) return assertEq(a, b); // If the expected is 0, actual must be too.
 
         uint256 percentDelta = stdMath.percentDelta(a, b);
@@ -438,7 +438,7 @@ abstract contract Test is DSTest, Script {
         int256 b,
         uint256 maxPercentDelta,
         string memory err
-    ) internal virtual {
+    ) internal  {
         if (b == 0) return assertEq(a, b); // If the expected is 0, actual must be too.
 
         uint256 percentDelta = stdMath.percentDelta(a, b);
@@ -472,18 +472,18 @@ library stdError {
                                 STD-STORAGE
 //////////////////////////////////////////////////////////////////////////*/
 
-struct StdStorage {
-    mapping (address => mapping(bytes4 => mapping(bytes32 => uint256))) slots;
-    mapping (address => mapping(bytes4 =>  mapping(bytes32 => bool))) finds;
-
-    bytes32[] _keys;
-    bytes4 _sig;
-    uint256 _depth;
-    address _target;
-    bytes32 _set;
-}
-
 library stdStorage {
+    struct StdStorage {
+        mapping (address => mapping(bytes4 => mapping(bytes32 => uint256))) slots;
+        mapping (address => mapping(bytes4 =>  mapping(bytes32 => bool))) finds;
+
+        bytes32[] _keys;
+        bytes4 _sig;
+        uint256 _depth;
+        address _target;
+        bytes32 _set;
+    }
+
     event SlotFound(address who, bytes4 fsig, bytes32 keysHash, uint slot);
     event WARNING_UninitedSlot(address who, uint slot);
 
